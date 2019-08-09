@@ -3,10 +3,14 @@ package com.artur.exchangecurrencies.ui.currency
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.artur.exchangecurrencies.R
 import com.artur.exchangecurrencies.databinding.ActivityCurrencyBinding
 import com.artur.exchangecurrencies.di.ViewModelFactory
+import com.artur.exchangecurrencies.model.Currency
+import com.artur.exchangecurrencies.model.RateResponse
+import com.artur.exchangecurrencies.ui.currency.adapter.CurrencyListAdapter
 import kotlinx.android.synthetic.main.activity_currency.*
 
 class CurrencyActivity : AppCompatActivity() {
@@ -23,6 +27,22 @@ class CurrencyActivity : AppCompatActivity() {
         viewModel = ViewModelProviders.of(this, ViewModelFactory(this)).get(CurrencyViewModel::class.java)
 
         binding.viewModel = viewModel
+
+        viewModel.rateResponse.observe(this, Observer { setupAdapter(it) })
+
+    }
+
+    private fun setupAdapter(rateResponse: RateResponse) {
+        val currencyListAdapter = CurrencyListAdapter(this)
+        binding.currencyRecyclerView.adapter = currencyListAdapter
+
+        //TODO remove this
+        val currencies = mutableListOf<Currency>()
+        rateResponse.rates.forEach {
+            currencies.add(Currency(it.key, it.value.toString()))
+        }
+
+        currencyListAdapter.updateCurrencyList(currencies)
 
     }
 

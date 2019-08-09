@@ -18,6 +18,7 @@ class CurrencyViewModel : BaseViewModel() {
     lateinit var currencyApi: CurrencyApi
 
     val loadingVisibility: MutableLiveData<Int> = MutableLiveData()
+    val rateResponse: MutableLiveData<RateResponse> = MutableLiveData()
     val errorMessage: MutableLiveData<Int> = MutableLiveData()
 
     private lateinit var subscription: Disposable
@@ -44,7 +45,7 @@ class CurrencyViewModel : BaseViewModel() {
     }
 
     private fun onCurrencyResultSuccess(result: RateResponse) {
-
+        rateResponse.postValue(result)
     }
 
     private fun onCurrencyResultError() {

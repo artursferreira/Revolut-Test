@@ -12,6 +12,6 @@ interface CurrencyApi {
     /**
      * Get the list of the pots from the API
      */
-    @GET("/latest?base={id}")
-    fun getCurrencies(@Query("id") base: String): Observable<RateResponse>
+    @GET("/latest")
+    fun getCurrencies(@Query("base") base: String): Observable<RateResponse>
 }
