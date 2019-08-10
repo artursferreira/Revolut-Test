@@ -6,6 +6,6 @@ package com.artur.exchangecurrencies.model
 data class Currency(
         val code: String,
         val value: String,
-        val currencyName: String = "",
+        val currencyName: String? = "",
         val flagIcon: Int = 0
 )

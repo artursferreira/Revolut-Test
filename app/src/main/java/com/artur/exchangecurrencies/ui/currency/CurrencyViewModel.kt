@@ -7,6 +7,7 @@ import com.artur.exchangecurrencies.network.CurrencyApi
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 /**
@@ -35,6 +36,7 @@ class CurrencyViewModel : BaseViewModel() {
     private fun getCurrencies(base: String) {
 
         subscription = currencyApi.getCurrencies(base)
+             //   .repeatWhen { handler -> handler.delay(1, TimeUnit.SECONDS) }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
 
