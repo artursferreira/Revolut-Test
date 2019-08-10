@@ -25,12 +25,29 @@ android {
     }
 }
 
+configurations {
+    ktlint
+}
+
+task ktlint(type: JavaExec, group: "verification") {
+    description = "Check Kotlin code style."
+    classpath = configurations.ktlint
+    main = "com.github.shyiko.ktlint.Main"
+    args "src/**/*.kt"
+}
+
+task ktlintFormat(type: JavaExec, group: "formatting") {
+    description = "Fix Kotlin code style deviations."
+    classpath = configurations.ktlint
+    main = "com.github.shyiko.ktlint.Main"
+    args "-F", "src/**/*.kt"
+}
+
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     //Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-
 
     //Android Support Libraries
     implementation "androidx.appcompat:appcompat:$support_library_version"
@@ -50,11 +67,13 @@ dependencies {
     // Dagger 2
     implementation "com.google.dagger:dagger:$dagger2_version"
     kapt "com.google.dagger:dagger-compiler:$dagger2_version"
-    compileOnly "org.glassfish:javax.annotation:3.1.1"
 
     //Rx
     implementation "io.reactivex.rxjava2:rxjava:$rxjava_version"
     implementation "io.reactivex.rxjava2:rxandroid:$rxandroid_version"
+
+    //Klint
+    ktlint "com.github.shyiko:ktlint:$ktlint_version"
 
     //Tests
     testImplementation "junit:junit:$junit"
