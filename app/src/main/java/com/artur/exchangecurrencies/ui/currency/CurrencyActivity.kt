@@ -9,12 +9,8 @@ import com.artur.exchangecurrencies.R
 import com.artur.exchangecurrencies.databinding.ActivityCurrencyBinding
 import com.artur.exchangecurrencies.di.ViewModelFactory
 import com.artur.exchangecurrencies.model.Currency
-import com.artur.exchangecurrencies.model.RateResponse
 import com.artur.exchangecurrencies.ui.currency.adapter.CurrencyListAdapter
-import com.artur.exchangecurrencies.utils.countryCodes
-import com.artur.exchangecurrencies.utils.currencyNames
 import kotlinx.android.synthetic.main.activity_currency.*
-import com.blongho.country_data.World
 
 class CurrencyActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCurrencyBinding
@@ -33,23 +29,12 @@ class CurrencyActivity : AppCompatActivity() {
 
         viewModel.rateResponse.observe(this, Observer { setupAdapter(it) })
 
-        World.init(application)
-
     }
 
-    private fun setupAdapter(rateResponse: RateResponse) {
+    private fun setupAdapter(currencies: List<Currency>) {
         val currencyListAdapter = CurrencyListAdapter(this)
         binding.currencyRecyclerView.adapter = currencyListAdapter
 
-        //TODO remove this
-        val currencies = mutableListOf<Currency>()
-        rateResponse.rates.forEach {
-            currencies.add(
-                Currency(it.key,
-                it.value.toString(),
-                    currencyNames[it.key],
-                    World.getFlagOf(countryCodes[it.key] ?: "")))
-        }
 
         currencyListAdapter.updateCurrencyList(currencies)
 

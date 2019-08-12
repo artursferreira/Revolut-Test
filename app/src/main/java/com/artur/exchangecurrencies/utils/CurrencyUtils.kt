@@ -409,3 +409,6 @@ val countryCodes = mapOf(
     "QAR" to "QA",
     "MZN" to "MZ"
 )
+
+fun getFlagUrl(countryCode: String) =
+    "https://raw.githubusercontent.com/hjnilsson/country-flags/master/png100px/${countryCode.toLowerCase()}.png"
