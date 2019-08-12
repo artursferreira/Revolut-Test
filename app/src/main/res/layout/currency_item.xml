@@ -3,11 +3,23 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+        <variable
+            name="currency"
+            type="com.artur.exchangecurrencies.model.Currency" />
+
+        <variable
+            name="listener"
+            type="com.artur.exchangecurrencies.ui.currency.adapter.CurrencyListener" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clickable="true"
         android:focusable="true"
+        android:onClick="@{() -> listener.onItemClick(currency)}"
         android:foreground="?attr/selectableItemBackground">
 
         <ImageView
@@ -53,6 +65,7 @@
             android:gravity="end"
             android:hint="@string/currency_value_hint"
             android:inputType="numberDecimal"
+            android:afterTextChanged="@{(s)-> listener.onTextChanged(s, currency)}"
             android:maxLength="10"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"

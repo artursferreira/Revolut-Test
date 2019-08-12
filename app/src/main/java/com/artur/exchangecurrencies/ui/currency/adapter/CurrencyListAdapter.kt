@@ -8,9 +8,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.artur.exchangecurrencies.R
 import com.artur.exchangecurrencies.databinding.CurrencyItemBinding
 import com.artur.exchangecurrencies.model.Currency
-import android.text.Editable
-import android.text.TextWatcher
-import android.util.Log
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 
@@ -18,7 +15,7 @@ import com.bumptech.glide.request.RequestOptions
 /**
  * Created by Artur on 08/08/2019.
  */
-class CurrencyListAdapter(private var context: Context) : RecyclerView.Adapter<CurrencyListAdapter.ViewHolder>() {
+class CurrencyListAdapter(private var context: Context, private val currencyListener: CurrencyListener) : RecyclerView.Adapter<CurrencyListAdapter.ViewHolder>() {
 
     private lateinit var currencyList: List<Currency>
 
@@ -33,7 +30,7 @@ class CurrencyListAdapter(private var context: Context) : RecyclerView.Adapter<C
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(context, currencyList[position])
+        holder.bind(context, currencyList[position], currencyListener)
     }
 
     override fun getItemCount(): Int {
@@ -47,10 +44,14 @@ class CurrencyListAdapter(private var context: Context) : RecyclerView.Adapter<C
 
     class ViewHolder(private val binding: CurrencyItemBinding) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(context: Context, currency: Currency) {
+        fun bind(context: Context, currency: Currency, currencyListener: CurrencyListener) {
             binding.currencyCode.text = currency.code
             binding.currencyName.text = currency.currencyName
-            binding.currencyValue.setText(currency.value)
+            binding.currencyValue.setText(currency.value.toString())
+
+            binding.currency = currency
+            binding.listener = currencyListener
+            binding.executePendingBindings()
 
             Glide.with(context)
                 .load(currency.flagIcon)
@@ -62,4 +63,24 @@ class CurrencyListAdapter(private var context: Context) : RecyclerView.Adapter<C
             }
         }
     }
+}
+
+class CurrencyListener(
+        private val onTextChangedListener: (value: CharSequence) -> Unit,
+        private val onClickListener: (currency: Currency) -> Unit
+) {
+
+    fun onItemClick(currency: Currency) {
+        if (!currency.selected) {
+            onClickListener(currency)
+        }
+    }
+
+    fun onTextChanged(s: CharSequence, currency: Currency) {
+        if (currency.selected) {
+            onTextChangedListener(s)
+        }
+    }
+
+
 }

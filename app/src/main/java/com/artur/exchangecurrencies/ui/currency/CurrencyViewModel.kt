@@ -25,10 +25,20 @@ class CurrencyViewModel : BaseViewModel() {
     val rateResponse: MutableLiveData<List<Currency>> = MutableLiveData()
     val errorMessage: MutableLiveData<Int> = MutableLiveData()
 
+    private var selectedCurrency: Currency
+
     private lateinit var subscription: Disposable
 
     init {
-        getCurrencies("EUR")
+        selectedCurrency = Currency(
+                "EUR",
+                1.0,
+                "Euro",
+                getFlagUrl("EU"),
+                true
+        )
+
+        getCurrencies()
     }
 
     override fun onCleared() {
@@ -36,11 +46,11 @@ class CurrencyViewModel : BaseViewModel() {
         subscription.dispose()
     }
 
-    private fun getCurrencies(base: String) {
+    private fun getCurrencies() {
         loadingVisibility.value = true
 
-        subscription = currencyApi.getCurrencies(base)
-             //   .repeatWhen { handler -> handler.delay(1, TimeUnit.SECONDS) }
+        subscription = currencyApi.getCurrencies(selectedCurrency.code)
+                //   .repeatWhen { handler -> handler.delay(1, TimeUnit.SECONDS) }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
 
@@ -52,14 +62,15 @@ class CurrencyViewModel : BaseViewModel() {
 
     private fun onCurrencyResultSuccess(result: RateResponse) {
         val currencies = mutableListOf<Currency>()
+        currencies.add(0, selectedCurrency)
         result.rates.forEach {
             currencies.add(
-                Currency(
-                    it.key,
-                    it.value.toString(),
-                    currencyNames[it.key],
-                    getFlagUrl(countryCodes[it.key] ?: "")
-                )
+                    Currency(
+                            it.key,
+                            it.value * selectedCurrency.value,
+                            currencyNames[it.key],
+                            getFlagUrl(countryCodes[it.key] ?: "")
+                    )
             )
         }
         loadingVisibility.value = false
@@ -69,5 +80,25 @@ class CurrencyViewModel : BaseViewModel() {
     private fun onCurrencyResultError() {
 
     }
+
+    fun onItemClick(currency: Currency) {
+        selectedCurrency = currency
+        selectedCurrency.selected = true
+        getCurrencies()
+    }
+
+
+    fun onCurrencyValueChanged(value: CharSequence) {
+        selectedCurrency.value = if (value.isEmpty()) 0.0
+        else try {
+            value.toString().replace(",", "").toDouble()
+        } catch (e: Exception) {
+            return
+        }
+
+        //TODO update list values
+    }
+
+
 
 }

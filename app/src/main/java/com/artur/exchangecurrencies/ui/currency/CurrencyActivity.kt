@@ -10,6 +10,7 @@ import com.artur.exchangecurrencies.databinding.ActivityCurrencyBinding
 import com.artur.exchangecurrencies.di.ViewModelFactory
 import com.artur.exchangecurrencies.model.Currency
 import com.artur.exchangecurrencies.ui.currency.adapter.CurrencyListAdapter
+import com.artur.exchangecurrencies.ui.currency.adapter.CurrencyListener
 import kotlinx.android.synthetic.main.activity_currency.*
 
 class CurrencyActivity : AppCompatActivity() {
@@ -33,7 +34,10 @@ class CurrencyActivity : AppCompatActivity() {
     }
 
     private fun setupAdapter(currencies: List<Currency>) {
-        val currencyListAdapter = CurrencyListAdapter(this)
+        val currencyListAdapter = CurrencyListAdapter(this, CurrencyListener(
+                { viewModel.onCurrencyValueChanged(it) },
+                { viewModel.onItemClick(it) }
+        ))
         binding.currencyRecyclerView.adapter = currencyListAdapter
 
 
