@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">Exchange currencies</string>
-    <string name="title_activity_currency">CurrencyActivity</string>
+    <string name="title_activity_currency">Currency converter</string>
     <string name="currency_value_hint">0.00</string>
 </resources>

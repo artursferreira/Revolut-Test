@@ -20,6 +20,7 @@ class CurrencyActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_currency)
         setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayShowTitleEnabled(true)
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_currency)
 
