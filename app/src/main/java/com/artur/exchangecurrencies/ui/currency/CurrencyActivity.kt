@@ -1,6 +1,7 @@
 package com.artur.exchangecurrencies.ui.currency
 
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
@@ -32,6 +33,7 @@ class CurrencyActivity : AppCompatActivity() {
         binding.viewModel = viewModel
 
         viewModel.rateResponse.observe(this, Observer { onCurrenciesUpdated(it) })
+        viewModel.errorMessage.observe(this, Observer { onError(it) })
 
     }
 
@@ -46,8 +48,15 @@ class CurrencyActivity : AppCompatActivity() {
     }
 
     private fun onCurrenciesUpdated(currencies: List<Currency>) {
+        binding.progressBar.visibility = View.GONE
+        binding.currencyRecyclerView.visibility = View.VISIBLE
         currencyListAdapter.updateCurrencyList(currencies)
 
+    }
+
+    private fun onError(b: Boolean) {
+        binding.progressBar.visibility = View.GONE
+        binding.errorConnection.visibility = View.VISIBLE
     }
 
 }

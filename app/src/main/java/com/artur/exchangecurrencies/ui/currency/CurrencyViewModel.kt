@@ -21,9 +21,8 @@ class CurrencyViewModel : BaseViewModel() {
     @Inject
     lateinit var currencyApi: CurrencyApi
 
-    val loadingVisibility: MutableLiveData<Boolean> = MutableLiveData()
     val rateResponse: MutableLiveData<List<Currency>> = MutableLiveData()
-    val errorMessage: MutableLiveData<Int> = MutableLiveData()
+    val errorMessage: MutableLiveData<Boolean> = MutableLiveData()
 
     private var response: RateResponse? = null
     private var selectedCurrency: Currency
@@ -49,7 +48,6 @@ class CurrencyViewModel : BaseViewModel() {
     }
 
     private fun getCurrencies() {
-        loadingVisibility.value = true
 
         subscription = currencyApi.getCurrencies(selectedCurrency.code)
                 //   .repeatWhen { handler -> handler.delay(1, TimeUnit.SECONDS) }
@@ -72,12 +70,12 @@ class CurrencyViewModel : BaseViewModel() {
                             it.value * selectedCurrency.calculatedValue)
         }?.filterNot { it.code == selectedCurrency.code }?.toMutableList()
         currencies?.add(0, selectedCurrency)
-        loadingVisibility.value = false
+
         rateResponse.postValue(currencies)
     }
 
     private fun onCurrencyResultError() {
-
+        errorMessage.postValue(true)
     }
 
     fun onItemClick(currency: Currency) {
