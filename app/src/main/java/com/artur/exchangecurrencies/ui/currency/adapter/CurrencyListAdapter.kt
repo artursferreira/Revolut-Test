@@ -3,7 +3,6 @@ package com.artur.exchangecurrencies.ui.currency.adapter
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -55,25 +54,12 @@ class CurrencyListAdapter(private var context: Context, private val currencyList
             binding.currency = currency
             binding.listener = currencyListener
 
-
             Glide.with(context)
                 .load(currency.flagIcon)
                 .apply(RequestOptions.circleCropTransform())
                 .into(binding.countryFlag)
 
             binding.currencyValue.isClickable = currency.selected
-
-            itemView.setBackgroundColor(if (currency.selected) ContextCompat.getColor(context, R.color.lightBlue)
-                else ContextCompat.getColor(context, R.color.colorPrimary))
-
-            binding.currencyCode.setTextColor(if (currency.selected) ContextCompat.getColor(context, R.color.colorPrimary)
-                else ContextCompat.getColor(context, R.color.primaryText))
-
-            binding.currencyName.setTextColor(if (currency.selected) ContextCompat.getColor(context, R.color.colorPrimary)
-                else ContextCompat.getColor(context, R.color.secondaryText))
-
-            binding.currencyValue.setTextColor(if (currency.selected) ContextCompat.getColor(context, R.color.colorPrimary)
-                else ContextCompat.getColor(context, android.R.color.black))
 
             binding.executePendingBindings()
         }
