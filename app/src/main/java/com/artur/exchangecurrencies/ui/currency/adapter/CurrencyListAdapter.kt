@@ -59,8 +59,6 @@ class CurrencyListAdapter(private var context: Context, private val currencyList
                 .apply(RequestOptions.circleCropTransform())
                 .into(binding.countryFlag)
 
-            binding.currencyValue.isClickable = currency.selected
-
             binding.executePendingBindings()
         }
     }
