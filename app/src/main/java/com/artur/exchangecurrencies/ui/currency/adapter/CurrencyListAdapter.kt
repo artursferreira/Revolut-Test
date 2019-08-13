@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.artur.exchangecurrencies.R
 import com.artur.exchangecurrencies.databinding.CurrencyItemBinding
@@ -17,7 +18,7 @@ import com.bumptech.glide.request.RequestOptions
  */
 class CurrencyListAdapter(private var context: Context, private val currencyListener: CurrencyListener) : RecyclerView.Adapter<CurrencyListAdapter.ViewHolder>() {
 
-    private lateinit var currencyList: List<Currency>
+    private var currencyList: MutableList<Currency> = mutableListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding: CurrencyItemBinding = DataBindingUtil.inflate(
@@ -34,21 +35,21 @@ class CurrencyListAdapter(private var context: Context, private val currencyList
     }
 
     override fun getItemCount(): Int {
-        return if (::currencyList.isInitialized) currencyList.size else 0
+        return currencyList.size
     }
 
     fun updateCurrencyList(currencyList: List<Currency>) {
-        this.currencyList = currencyList
-        notifyDataSetChanged()
+        val diffCallback = CurrencyDiffUtilCallback(this.currencyList, currencyList)
+        val diffResult = DiffUtil.calculateDiff(diffCallback)
+
+        this.currencyList.clear()
+        this.currencyList.addAll(currencyList)
+        diffResult.dispatchUpdatesTo(this)
     }
 
     class ViewHolder(private val binding: CurrencyItemBinding) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(context: Context, currency: Currency, currencyListener: CurrencyListener) {
-            binding.currencyCode.text = currency.code
-            binding.currencyName.text = currency.currencyName
-            binding.currencyValue.setText(currency.value.toString())
-
             binding.currency = currency
             binding.listener = currencyListener
             binding.executePendingBindings()

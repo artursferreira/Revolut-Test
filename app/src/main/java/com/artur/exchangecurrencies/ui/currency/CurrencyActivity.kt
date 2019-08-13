@@ -16,6 +16,7 @@ import kotlinx.android.synthetic.main.activity_currency.*
 class CurrencyActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCurrencyBinding
     private lateinit var viewModel: CurrencyViewModel
+    private lateinit var currencyListAdapter: CurrencyListAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,22 +25,27 @@ class CurrencyActivity : AppCompatActivity() {
         supportActionBar?.setDisplayShowTitleEnabled(true)
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_currency)
+        setupAdapter()
 
         viewModel = ViewModelProviders.of(this, ViewModelFactory(this)).get(CurrencyViewModel::class.java)
 
         binding.viewModel = viewModel
 
-        viewModel.rateResponse.observe(this, Observer { setupAdapter(it) })
+        viewModel.rateResponse.observe(this, Observer { onCurrenciesUpdated(it) })
 
     }
 
-    private fun setupAdapter(currencies: List<Currency>) {
-        val currencyListAdapter = CurrencyListAdapter(this, CurrencyListener(
+    private fun setupAdapter() {
+        currencyListAdapter = CurrencyListAdapter(this, CurrencyListener(
                 { viewModel.onCurrencyValueChanged(it) },
                 { viewModel.onItemClick(it) }
         ))
         binding.currencyRecyclerView.adapter = currencyListAdapter
 
+
+    }
+
+    private fun onCurrenciesUpdated(currencies: List<Currency>) {
 
         currencyListAdapter.updateCurrencyList(currencies)
 

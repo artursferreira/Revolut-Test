@@ -25,6 +25,7 @@ class CurrencyViewModel : BaseViewModel() {
     val rateResponse: MutableLiveData<List<Currency>> = MutableLiveData()
     val errorMessage: MutableLiveData<Int> = MutableLiveData()
 
+    private var response: RateResponse? = null
     private var selectedCurrency: Currency
 
     private lateinit var subscription: Disposable
@@ -35,6 +36,7 @@ class CurrencyViewModel : BaseViewModel() {
                 1.0,
                 "Euro",
                 getFlagUrl("EU"),
+                1.0,
                 true
         )
 
@@ -53,26 +55,23 @@ class CurrencyViewModel : BaseViewModel() {
                 //   .repeatWhen { handler -> handler.delay(1, TimeUnit.SECONDS) }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-
                 .subscribe(
-                        { result -> onCurrencyResultSuccess(result) },
+                        { result -> updateCurrencyResult(result) },
                         { onCurrencyResultError() }
                 )
     }
 
-    private fun onCurrencyResultSuccess(result: RateResponse) {
-        val currencies = mutableListOf<Currency>()
-        currencies.add(0, selectedCurrency)
-        result.rates.forEach {
-            currencies.add(
+    private fun updateCurrencyResult(result: RateResponse?) {
+        this.response = result
+        val currencies = result?.rates?.map {
                     Currency(
                             it.key,
-                            it.value * selectedCurrency.value,
+                            it.value,
                             currencyNames[it.key],
-                            getFlagUrl(countryCodes[it.key] ?: "")
-                    )
-            )
-        }
+                            getFlagUrl(countryCodes[it.key] ?: ""),
+                            it.value * selectedCurrency.calculatedValue)
+        }?.filterNot { it.code == selectedCurrency.code }?.toMutableList()
+        currencies?.add(0, selectedCurrency)
         loadingVisibility.value = false
         rateResponse.postValue(currencies)
     }
@@ -89,16 +88,15 @@ class CurrencyViewModel : BaseViewModel() {
 
 
     fun onCurrencyValueChanged(value: CharSequence) {
-        selectedCurrency.value = if (value.isEmpty()) 0.0
+        selectedCurrency.calculatedValue = if (value.isEmpty()) 0.0
         else try {
             value.toString().replace(",", "").toDouble()
         } catch (e: Exception) {
             return
         }
 
-        //TODO update list values
+        updateCurrencyResult(response)
     }
-
 
 
 }

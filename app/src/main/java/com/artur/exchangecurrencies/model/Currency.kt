@@ -5,8 +5,9 @@ package com.artur.exchangecurrencies.model
  */
 data class Currency(
         val code: String,
-        var value: Double,
+        var conversionValue: Double,
         val currencyName: String? = "",
         val flagIcon: String = "",
+        var calculatedValue: Double,
         var selected: Boolean = false
 )
