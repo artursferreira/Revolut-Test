@@ -3,9 +3,24 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+        <variable
+            name="currency"
+            type="com.artur.exchangecurrencies.model.Currency" />
+
+        <variable
+            name="listener"
+            type="com.artur.exchangecurrencies.ui.currency.adapter.CurrencyListener" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="true"
+        android:onClick="@{() -> listener.onItemClick(currency)}"
+        android:foreground="?attr/selectableItemBackground">
 
         <ImageView
             android:id="@+id/country_flag"
@@ -25,6 +40,8 @@
             android:layout_marginTop="@dimen/default_margin"
             android:textSize="18sp"
             android:textStyle="bold"
+            android:textColor="@color/primaryText"
+            android:text="@{currency.code}"
             app:layout_constraintEnd_toStartOf="@id/currency_value"
             app:layout_constraintStart_toEndOf="@id/country_flag"
             app:layout_constraintTop_toTopOf="parent"
@@ -36,6 +53,8 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/default_margin"
             android:textSize="16sp"
+            android:textColor="@color/secondaryText"
+            android:text="@{currency.currencyName}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/currency_value"
             app:layout_constraintStart_toStartOf="@id/currency_code"
@@ -50,8 +69,10 @@
             android:gravity="end"
             android:hint="@string/currency_value_hint"
             android:inputType="numberDecimal"
-            android:maxLength="10"
+            android:afterTextChanged="@{(s)-> listener.onTextChanged(s, currency)}"
+            android:maxLength="14"
             android:textStyle="bold"
+            app:currencyValue="@{currency.calculatedValue}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/currency_code"
