@@ -35,6 +35,12 @@ class CurrencyActivity : AppCompatActivity() {
         viewModel.rateResponse.observe(this, Observer { onCurrenciesUpdated(it) })
         viewModel.errorMessage.observe(this, Observer { onError(it) })
 
+        binding.btnTryAgain.setOnClickListener {
+            binding.errorConnection.visibility = View.GONE
+            binding.progressBar.visibility = View.VISIBLE
+            viewModel.getCurrencies()
+        }
+
     }
 
     private fun setupAdapter() {

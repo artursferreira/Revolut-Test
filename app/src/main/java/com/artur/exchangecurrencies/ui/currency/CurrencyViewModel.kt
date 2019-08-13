@@ -47,7 +47,7 @@ class CurrencyViewModel : BaseViewModel() {
         subscription.dispose()
     }
 
-    private fun getCurrencies() {
+    fun getCurrencies() {
 
         subscription = currencyApi.getCurrencies(selectedCurrency.code)
                 //   .repeatWhen { handler -> handler.delay(1, TimeUnit.SECONDS) }
