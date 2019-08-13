@@ -46,7 +46,6 @@ class CurrencyActivity : AppCompatActivity() {
     }
 
     private fun onCurrenciesUpdated(currencies: List<Currency>) {
-
         currencyListAdapter.updateCurrencyList(currencies)
 
     }

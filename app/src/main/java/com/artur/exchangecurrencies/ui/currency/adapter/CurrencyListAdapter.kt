@@ -3,6 +3,7 @@ package com.artur.exchangecurrencies.ui.currency.adapter
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -61,6 +62,18 @@ class CurrencyListAdapter(private var context: Context, private val currencyList
 
             if (adapterPosition != RecyclerView.NO_POSITION) {
                 binding.currencyValue.isClickable = adapterPosition == 0
+
+                itemView.setBackgroundColor(if (adapterPosition == 0) ContextCompat.getColor(context, R.color.lightBlue)
+                else ContextCompat.getColor(context, R.color.colorPrimary))
+
+                binding.currencyCode.setTextColor(if (adapterPosition == 0) ContextCompat.getColor(context, R.color.colorPrimary)
+                else ContextCompat.getColor(context, R.color.primaryText))
+
+                binding.currencyName.setTextColor(if (adapterPosition == 0) ContextCompat.getColor(context, R.color.colorPrimary)
+                else ContextCompat.getColor(context, R.color.secondaryText))
+
+                binding.currencyValue.setTextColor(if (adapterPosition == 0) ContextCompat.getColor(context, R.color.colorPrimary)
+                else ContextCompat.getColor(context, android.R.color.black))
             }
         }
     }
