@@ -11,6 +11,7 @@ import com.artur.exchangecurrencies.utils.getFlagUrl
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 /**
@@ -50,7 +51,7 @@ class CurrencyViewModel : BaseViewModel() {
     fun getCurrencies() {
 
         subscription = currencyApi.getCurrencies(selectedCurrency.code)
-                //   .repeatWhen { handler -> handler.delay(1, TimeUnit.SECONDS) }
+                .repeatWhen { handler -> handler.delay(1, TimeUnit.SECONDS) }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
@@ -62,12 +63,12 @@ class CurrencyViewModel : BaseViewModel() {
     private fun updateCurrencyResult(result: RateResponse?) {
         this.response = result
         val currencies = result?.rates?.map {
-                    Currency(
-                            it.key,
-                            it.value,
-                            currencyNames[it.key],
-                            getFlagUrl(countryCodes[it.key] ?: ""),
-                            it.value * selectedCurrency.calculatedValue)
+            Currency(
+                    it.key,
+                    it.value,
+                    currencyNames[it.key],
+                    getFlagUrl(countryCodes[it.key] ?: ""),
+                    it.value * selectedCurrency.calculatedValue)
         }?.filterNot { it.code == selectedCurrency.code }?.toMutableList()
         currencies?.add(0, selectedCurrency)
 
