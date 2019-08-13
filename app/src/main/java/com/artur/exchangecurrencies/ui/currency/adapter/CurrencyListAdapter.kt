@@ -33,6 +33,7 @@ class CurrencyListAdapter(private var context: Context, private val currencyList
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(context, currencyList[position], currencyListener)
+
     }
 
     override fun getItemCount(): Int {
@@ -53,28 +54,28 @@ class CurrencyListAdapter(private var context: Context, private val currencyList
         fun bind(context: Context, currency: Currency, currencyListener: CurrencyListener) {
             binding.currency = currency
             binding.listener = currencyListener
-            binding.executePendingBindings()
+
 
             Glide.with(context)
                 .load(currency.flagIcon)
                 .apply(RequestOptions.circleCropTransform())
                 .into(binding.countryFlag)
 
-            if (adapterPosition != RecyclerView.NO_POSITION) {
-                binding.currencyValue.isClickable = adapterPosition == 0
+            binding.currencyValue.isClickable = currency.selected
 
-                itemView.setBackgroundColor(if (adapterPosition == 0) ContextCompat.getColor(context, R.color.lightBlue)
+            itemView.setBackgroundColor(if (currency.selected) ContextCompat.getColor(context, R.color.lightBlue)
                 else ContextCompat.getColor(context, R.color.colorPrimary))
 
-                binding.currencyCode.setTextColor(if (adapterPosition == 0) ContextCompat.getColor(context, R.color.colorPrimary)
+            binding.currencyCode.setTextColor(if (currency.selected) ContextCompat.getColor(context, R.color.colorPrimary)
                 else ContextCompat.getColor(context, R.color.primaryText))
 
-                binding.currencyName.setTextColor(if (adapterPosition == 0) ContextCompat.getColor(context, R.color.colorPrimary)
+            binding.currencyName.setTextColor(if (currency.selected) ContextCompat.getColor(context, R.color.colorPrimary)
                 else ContextCompat.getColor(context, R.color.secondaryText))
 
-                binding.currencyValue.setTextColor(if (adapterPosition == 0) ContextCompat.getColor(context, R.color.colorPrimary)
+            binding.currencyValue.setTextColor(if (currency.selected) ContextCompat.getColor(context, R.color.colorPrimary)
                 else ContextCompat.getColor(context, android.R.color.black))
-            }
+
+            binding.executePendingBindings()
         }
     }
 }

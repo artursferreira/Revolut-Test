@@ -5,6 +5,8 @@
 
     <data>
 
+        <import type="androidx.core.content.ContextCompat" />
+
         <variable
             name="currency"
             type="com.artur.exchangecurrencies.model.Currency" />

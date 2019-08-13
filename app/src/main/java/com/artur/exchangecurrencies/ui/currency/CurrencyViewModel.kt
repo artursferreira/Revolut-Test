@@ -82,6 +82,8 @@ class CurrencyViewModel : BaseViewModel() {
     fun onItemClick(currency: Currency) {
         selectedCurrency = currency
         selectedCurrency.selected = true
+        if (!subscription.isDisposed)
+            subscription.dispose()
         getCurrencies()
     }
 
