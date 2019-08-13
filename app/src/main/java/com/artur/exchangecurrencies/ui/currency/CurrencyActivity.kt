@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.SimpleItemAnimator
 import com.artur.exchangecurrencies.R
 import com.artur.exchangecurrencies.databinding.ActivityCurrencyBinding
 import com.artur.exchangecurrencies.di.ViewModelFactory
@@ -13,6 +14,7 @@ import com.artur.exchangecurrencies.model.Currency
 import com.artur.exchangecurrencies.ui.currency.adapter.CurrencyListAdapter
 import com.artur.exchangecurrencies.ui.currency.adapter.CurrencyListener
 import kotlinx.android.synthetic.main.activity_currency.*
+
 
 class CurrencyActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCurrencyBinding
@@ -49,12 +51,13 @@ class CurrencyActivity : AppCompatActivity() {
                 { viewModel.onItemClick(it) }
         ))
         binding.currencyRecyclerView.adapter = currencyListAdapter
-
+        (binding.currencyRecyclerView.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
 
     }
 
     private fun onCurrenciesUpdated(currencies: List<Currency>) {
         binding.progressBar.visibility = View.GONE
+        binding.errorConnection.visibility = View.GONE
         binding.currencyRecyclerView.visibility = View.VISIBLE
         currencyListAdapter.updateCurrencyList(currencies)
 
@@ -62,6 +65,7 @@ class CurrencyActivity : AppCompatActivity() {
 
     private fun onError(b: Boolean) {
         binding.progressBar.visibility = View.GONE
+        binding.currencyRecyclerView.visibility = View.GONE
         binding.errorConnection.visibility = View.VISIBLE
     }
 
